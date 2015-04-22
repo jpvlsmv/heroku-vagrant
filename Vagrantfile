@@ -22,7 +22,7 @@ Vagrant.configure(2) do |config|
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
-  config.vm.network "forwarded_port", guest: 5000, host: 5000
+  config.vm.network "forwarded_port", guest: 5000, host: 5000, auto_correct: true
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -66,8 +66,10 @@ Vagrant.configure(2) do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
-    sudo apt-get update
+    sudo apt-get update 
     sudo apt-get install -y git
-    su - vagrant -c "for e in /vagrant/*.git ; do git clone $e ; done"
+    su - vagrant -c 'for e in /repos/*.git ; do git clone $e ; done'
+    sudo apt-get install -y python-virtualenv
+    wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sudo sh
   SHELL
 end
